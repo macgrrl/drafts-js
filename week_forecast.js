@@ -10,6 +10,18 @@ const md_todo = "-[ ]";
 const md_h1 = "# ";
 const md_bullet = "* ";
 
+// ** special activities for each day - array with 0 as Sunday
+const day_activities = [
+    "", // Sunday
+    "", // Monday
+    "", // Tuesday
+    "Shopping - NatGroc, Hy-Vee", // Wednesday
+    "CrossFit", // Thursday
+    "Shopping - NewPi\nLunch @ Lu's", // Friday
+    "", // Saturday
+];
+
+
 // set up dates
 let d = new Date(); // get today's Date
 let dow = d.getDay(); // day of week
@@ -95,7 +107,7 @@ function create_week_draft(d) {
 
     // loop for each day of the upcoming week
     for (i = 0; i < 7; ++i) {
-        append_for_day(draft, d);
+        append_for_day(draft, d, day_activities[i]);
         d = adjustDate(d, "+1 day");
     }
 
@@ -107,12 +119,13 @@ function create_week_draft(d) {
 }
 
 
-function append_for_day(draft, d) {
+function append_for_day(draft, d, s) {
     /*
     Append content for specified day
     arguments
         draft : Draft to append text
         d : Date
+        s : string of regular activities
     */
 
     const date_string = strftime(d, "%F %a");
@@ -135,5 +148,10 @@ function append_for_day(draft, d) {
 
 		draft.append(md_bullet + event_string);
 	}
+
+    // append regular activities if any
+    if (s != "") {
+        draft.append(s);
+    }
 
 }
