@@ -66,6 +66,7 @@ if (p.show()) {
 
 	editor.draft = draft; // show the draft in the Drafts editor
 	app.applyWorkspace(Workspace.find("Week")); // set the Week Workspace
+    app.currentWindow.hideActionList(); // hide the list of actions
 	
 }
 
