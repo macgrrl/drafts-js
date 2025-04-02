@@ -22,29 +22,31 @@ const day_activities = [
 ];
 
 
-// set up dates
-let d = new Date(); // get today's Date
-let dow = d.getDay(); // day of week
-
-if (dow != 0) {
-    // today is not Sunday
-    d = adjustDate(d, "-" + dow + " day");
-}
+// get Sunday of this week
+let d = get_sunday(new Date());
 
 // set up Prompt to choose which week to look at
 let p = new Prompt();
 p.title = "Week Forecast";
 
+p.addDatePicker("selDate", "Date Selection", new Date(), {"mode" : "date"});
+
+p.addButton("Last Week " + strftime(adjustDate(d, "-7 day"), "%F"));
 p.addButton("This Week " + strftime(d, "%F"));
 p.addButton("Next Week " + strftime(adjustDate(d, "+7 day"), "%F"));
 p.addButton("Following Week " + strftime(adjustDate(d, "+14 day"), "%F"));
+p.addButton("Selected Date");
 
 // if `show` returns false, user hit cancel button
 if (p.show()) {
     let textFieldContents = p.fieldValues["textFieldName"];
     let startDate = p.fieldValues["myDate"];
 
-    if (p.buttonPressed.startsWith("This")) {
+    if (p.buttonPressed.startsWith("Last")) {
+        // last week - update d
+        d = adjustDate(d, "-7 day");
+    }
+    else if (p.buttonPressed.startsWith("This")) {
         // this week - no need to modify date d
     }
     else if (p.buttonPressed.startsWith("Next")) {
@@ -55,15 +57,39 @@ if (p.show()) {
         // next week - update d
         d = adjustDate(d, "+14 day");
     }
+    else if (p.buttonPressed == "Selected Date") {
+        // user selected date - determine Sunday of the week of the selected dat
+        d = get_sunday(p.fieldValues.selDate);
+    }
 
 	let draft = find_or_create_week_draft(d);
 
 	editor.draft = draft; // show the draft in the Drafts editor
 	app.applyWorkspace(Workspace.find("Week")); // set the Week Workspace
+	
 }
 
 
 // ** Functions
+
+function get_sunday(d) {
+    /*
+    returns Date corresponding to Sunday of passed Date, d
+    argument
+        d : Date
+    returns computed Date
+    */
+
+    let dow = d.getDay(); // day of week
+
+    if (dow != 0) {
+        // today is not Sunday
+        d = adjustDate(d, "-" + dow + " day");
+    }
+
+    return d;
+}
+
 
 function find_or_create_week_draft(d) {
     /*
@@ -73,13 +99,13 @@ function find_or_create_week_draft(d) {
 	returns Draft created or found
 	*/
 
-    let drafts = Draft.query(week_title + strftime(d, "%F"), "inbox", ["week"]);
-        // query a list of drafts in the inbox with the tag "week"
+    let drafts = Draft.queryByTitle(week_title + strftime(d, "%F"));
+        // query a list of drafts with the specified title
     let draft = (drafts.length > 0) ? drafts[0] : null;
         // set to first draft found or null if none were found
-
+ 
     if (draft == null) {
-    	// no Draft found - create one
+        // no Draft found - create one
         draft = create_week_draft(d);
     }
 
@@ -102,8 +128,13 @@ function create_week_draft(d) {
     draft.addTag("week");
     draft.content = draft_title + "\n";
 
+    // links to previous and next week
+    draft.append(md_h1 + "Links", "\n\n");
+    draft.append("[[" + week_title + strftime(adjustDate(d, "-7 days"), "%F") + "]]"); 
+    draft.append("[[" + week_title + strftime(adjustDate(d, "+7 days"), "%F") + "]]"); 
+
     // general to-dos
-    draft.append(md_h1 + "To do\n" + md_todo);
+    draft.append(md_h1 + "To do\n" + md_todo, "\n\n");
 
     // loop for each day of the upcoming week
     for (i = 0; i < 7; ++i) {
@@ -116,6 +147,9 @@ function create_week_draft(d) {
 
     // update the draft
     draft.update();
+
+    // return the draft
+    return draft;
 }
 
 
@@ -153,5 +187,4 @@ function append_for_day(draft, d, s) {
     if (s != "") {
         draft.append(s);
     }
-
 }
