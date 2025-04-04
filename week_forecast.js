@@ -31,11 +31,12 @@ p.title = "Week Forecast";
 
 p.addDatePicker("selDate", "Date Selection", new Date(), {"mode" : "date"});
 
+p.addButton("Selected Date");
+
 p.addButton("Last Week " + strftime(adjustDate(d, "-7 day"), "%F"));
-p.addButton("This Week " + strftime(d, "%F"));
+p.addButton(">> This Week " + strftime(d, "%F") + " <<");
 p.addButton("Next Week " + strftime(adjustDate(d, "+7 day"), "%F"));
 p.addButton("Following Week " + strftime(adjustDate(d, "+14 day"), "%F"));
-p.addButton("Selected Date");
 
 // if `show` returns false, user hit cancel button
 if (p.show()) {
@@ -131,8 +132,8 @@ function create_week_draft(d) {
 
     // links to previous and next week
     draft.append(md_h1 + "Links", "\n\n");
-    draft.append("[[" + week_title + strftime(adjustDate(d, "-7 days"), "%F") + "]]");
-    draft.append("[[" + week_title + strftime(adjustDate(d, "+7 days"), "%F") + "]]");
+    draft.append("[[" + week_title + strftime(adjustDate(d, "-7 days"), "%F") + "]] " + 
+        "[[" + week_title + strftime(adjustDate(d, "+7 days"), "%F") + "]]"); 
 
     // general to-dos
     draft.append(md_h1 + "To do\n" + md_todo, "\n\n");
