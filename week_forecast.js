@@ -6,7 +6,7 @@ Present Prompt to access week draft
 const week_title = "Week of ";
 
 // ** markdown constants
-const md_todo = "-[ ]";
+const md_todo = "- [ ] ";
 const md_h1 = "# ";
 const md_bullet = "* ";
 
@@ -20,7 +20,6 @@ const day_activities = [
     "Shopping - NewPi\nLunch @ Lu's", // Friday
     "", // Saturday
 ];
-
 
 // get Sunday of this week
 let d = get_sunday(new Date());
@@ -122,18 +121,20 @@ function create_week_draft(d) {
         d : Date of draft to create
     returns created Draft
     */
+    
+    let next_week_link = " [[" + week_title + strftime(adjustDate(d, "+7 days"), "%F") + "]]";
 
     let draft = new Draft();
     const draft_title = week_title + strftime(d, "%F");
 
     // tag and header
     draft.addTag("week");
-    draft.content = draft_title + "\n";
+    draft.content = draft_title;
 
     // links to previous and next week
     draft.append(md_h1 + "Links", "\n\n");
-    draft.append("[[" + week_title + strftime(adjustDate(d, "-7 days"), "%F") + "]] " + 
-        "[[" + week_title + strftime(adjustDate(d, "+7 days"), "%F") + "]]"); 
+    draft.append("[[" + week_title + strftime(adjustDate(d, "-7 days"), "%F") + "]]" + 
+        next_week_link); 
 
     // general to-dos
     draft.append(md_h1 + "To do\n" + md_todo, "\n\n");
@@ -145,7 +146,7 @@ function create_week_draft(d) {
     }
 
     // footer
-    draft.append(md_h1 + "Next Week", "\n\n");
+    draft.append(md_h1 + "Next Week" + next_week_link + "\n", "\n\n");
 
     // update the draft
     draft.update();
