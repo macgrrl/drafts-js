@@ -58,16 +58,16 @@ if (p.show()) {
         d = adjustDate(d, "+14 day");
     }
     else if (p.buttonPressed == "Selected Date") {
-        // user selected date - determine Sunday of the week of the selected dat
+        // user selected date - determine Sunday of the week of the selected date
         d = get_sunday(p.fieldValues.selDate);
     }
 
-	let draft = find_or_create_week_draft(d);
+    let draft = find_or_create_week_draft(d);
 
-	editor.draft = draft; // show the draft in the Drafts editor
-	app.applyWorkspace(Workspace.find("Week")); // set the Week Workspace
+    editor.draft = draft; // show the draft in the Drafts editor
+    app.applyWorkspace(Workspace.find("Week")); // set the Week Workspace
     app.currentWindow.hideActionList(); // hide the list of actions
-	
+
 }
 
 
@@ -96,15 +96,15 @@ function find_or_create_week_draft(d) {
     /*
     locate or create the week draft
     arguments
-		d : Date of draft to find
-	returns Draft created or found
-	*/
+        d : Date of draft to find
+    returns Draft created or found
+    */
 
     let drafts = Draft.queryByTitle(week_title + strftime(d, "%F"));
         // query a list of drafts with the specified title
     let draft = (drafts.length > 0) ? drafts[0] : null;
         // set to first draft found or null if none were found
- 
+
     if (draft == null) {
         // no Draft found - create one
         draft = create_week_draft(d);
@@ -178,13 +178,13 @@ function append_for_day(draft, d, s) {
 
     const cal = Calendar.find("Family"); // family Calendar
 
-	let events = cal.events(d1, d2);
+    let events = cal.events(d1, d2);
 
-	for (let event of events) {
-		let event_string = strftime(event.startDate, "%H:%M ") + event.title;
+    for (let event of events) {
+        let event_string = strftime(event.startDate, "%H:%M ") + event.title;
 
-		draft.append(md_bullet + event_string);
-	}
+        draft.append(md_bullet + event_string);
+    }
 
     // append regular activities if any
     if (s != "") {
