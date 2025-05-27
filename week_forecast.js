@@ -14,7 +14,7 @@ const md_bullet = "* ";
 const day_activities = [
     "", // Sunday
     "", // Monday
-    "", // Tuesday
+    "Rubbish day", // Tuesday
     "Shopping - NatGroc, Hy-Vee", // Wednesday
     "CrossFit", // Thursday
     "Shopping - NewPi\nLunch @ Lu's", // Friday
