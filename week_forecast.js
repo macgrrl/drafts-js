@@ -121,8 +121,8 @@ function create_week_draft(d) {
         d : Date of draft to create
     returns created Draft
     */
-    
-    let next_week_link = " [[" + week_title + strftime(adjustDate(d, "+7 days"), "%F") + "]]";
+
+    let next_week_link = "[[" + week_title + strftime(adjustDate(d, "+7 days"), "%F") + "]]";
 
     let draft = new Draft();
     const draft_title = week_title + strftime(d, "%F");
@@ -133,8 +133,8 @@ function create_week_draft(d) {
 
     // links to previous and next week
     draft.append(md_h1 + "Links", "\n\n");
-    draft.append("[[" + week_title + strftime(adjustDate(d, "-7 days"), "%F") + "]]" + 
-        next_week_link); 
+    draft.append("[[" + week_title + strftime(adjustDate(d, "-7 days"), "%F") + "]] " +
+        next_week_link);
 
     // general to-dos
     draft.append(md_h1 + "To do\n" + md_todo, "\n\n");
@@ -146,7 +146,7 @@ function create_week_draft(d) {
     }
 
     // footer
-    draft.append(md_h1 + "Next Week" + next_week_link + "\n", "\n\n");
+    draft.append(md_h1 + "Next Week\n" + next_week_link + "\n", "\n\n");
 
     // update the draft
     draft.update();
